@@ -1,0 +1,405 @@
+1. Objetivo general
+
+Desarrollar un sistema bancario utilizando Java y los principios de la Programación Orientada a Objetos (POO), en el cual todas las operaciones bancarias estén encapsuladas, validadas y controladas mediante excepciones.
+
+El sistema deberá permitir administrar cuentas bancarias, realizar depósitos, retiros y transferencias, consultar saldos y almacenar un historial de operaciones.
+
+Se deberán aplicar los siguientes conceptos:
+
+Encapsulamiento.
+
+Herencia.
+
+Polimorfismo.
+
+Abstracción.
+
+Constructores y sobrecarga de constructores.
+
+Uso de this y super.
+
+Manejo de excepciones.
+
+Colecciones mediante ArrayList.
+
+Organización mediante paquetes.
+
+2. Descripción del problema
+
+Se requiere desarrollar un sistema bancario que permita administrar distintas cuentas y realizar operaciones financieras de manera segura.
+
+El saldo de una cuenta no debe poder modificarse directamente desde otras clases. Todas las modificaciones deberán realizarse mediante métodos específicos que comprueben que la operación sea válida.
+
+Además, cada operación realizada deberá registrarse en un historial para poder consultar los movimientos de una cuenta.
+
+El sistema deberá manejar errores mediante excepciones personalizadas, evitando que una operación incorrecta modifique la información bancaria o provoque que el programa se cierre inesperadamente.
+
+3. Requerimientos funcionales
+
+El programa deberá contar con las siguientes funcionalidades:
+
+Administración de cuentas
+
+Registrar nuevas cuentas bancarias.
+
+Asignar un número de cuenta y un titular.
+
+Establecer un saldo inicial.
+
+Asignar un NIP.
+
+Buscar cuentas mediante su número.
+
+Consultar los datos de una cuenta.
+
+Operaciones bancarias
+
+Realizar depósitos.
+
+Realizar retiros.
+
+Realizar transferencias entre cuentas.
+
+Consultar el saldo disponible.
+
+Registrar las operaciones realizadas.
+
+Historial
+
+Guardar cada operación exitosa.
+
+Almacenar fecha, monto y tipo de operación.
+
+Consultar los movimientos registrados.
+
+Mostrar el historial de una cuenta.
+
+Seguridad y validaciones
+
+Impedir modificaciones directas al saldo.
+
+No permitir cantidades iguales o menores a cero.
+
+Impedir retiros que superen el saldo disponible.
+
+Validar que las cuentas de origen y destino existan.
+
+No permitir transferencias hacia la misma cuenta.
+
+Validar el NIP antes de autorizar las operaciones que lo requieran.
+
+4. Diseño de clases y UML
+
+Implementar las siguientes clases y relaciones:
+
+Clase Banco
+
+Responsable de administrar las cuentas bancarias.
+
+Atributos:
+
+cuentas: ArrayList<Cuenta>
+
+Constructor:
+
+Banco(): inicializa la colección de cuentas.
+
+Métodos:
+
+registrarCuenta(Cuenta cuenta): void
+
+buscarCuenta(String numeroCuenta): Cuenta
+
+realizarOperacion(Operacion operacion): void
+
+Clase Cuenta
+
+Representa una cuenta bancaria y controla el acceso a su saldo.
+
+Atributos privados:
+
+numeroCuenta: String
+
+titular: String
+
+saldo: double
+
+nip: String
+
+historial: Historial
+
+Constructores:
+
+Cuenta(String numeroCuenta, String titular, String nip): crea una cuenta con saldo inicial de cero.
+
+Cuenta(String numeroCuenta, String titular, double saldoInicial, String nip): permite establecer un saldo inicial válido.
+
+Métodos:
+
+depositar(double monto): void
+
+retirar(double monto): void
+
+transferir(double monto, Cuenta cuentaDestino): void
+
+consultarSaldo(): double
+
+validarMonto(double monto): boolean
+
+validarNip(String nip): boolean
+
+actualizarSaldo(double nuevoSaldo): void
+
+getNumeroCuenta(): String
+
+getTitular(): String
+
+getHistorial(): Historial
+
+El saldo deberá permanecer privado. No se deberá crear un setter público que permita modificarlo directamente.
+
+Clase abstracta Operacion
+
+Representa una operación bancaria general.
+
+Atributos protegidos o privados:
+
+fecha: LocalDateTime
+
+monto: double
+
+tipo: String
+
+Constructor:
+
+Operacion(double monto, String tipo): inicializa el monto, el tipo y la fecha de la operación.
+
+Métodos:
+
+ejecutar(): void (abstracto).
+
+registrarOperacion(): void
+
+getFecha(): LocalDateTime
+
+getMonto(): double
+
+getTipo(): String
+
+Clase Deposito
+
+Hereda de Operacion.
+
+Constructor:
+
+Deposito(double monto, Cuenta cuentaDestino): inicializa el depósito y la cuenta que recibirá el dinero, utilizando super() para inicializar los atributos heredados.
+
+Atributos propios:
+
+cuentaDestino: Cuenta
+
+Métodos:
+
+ejecutar(): void
+
+Sobrescribir los métodos necesarios para realizar y registrar el depósito.
+
+Clase Retiro
+
+Hereda de Operacion.
+
+Constructor:
+
+Retiro(double monto, Cuenta cuentaOrigen): inicializa el retiro y la cuenta de la cual se descontará el dinero, utilizando super().
+
+Atributos propios:
+
+cuentaOrigen: Cuenta
+
+Métodos:
+
+ejecutar(): void
+
+Sobrescribir los métodos necesarios para realizar y registrar el retiro.
+
+Clase Transferencia
+
+Hereda de Operacion.
+
+Constructor:
+
+Transferencia(double monto, Cuenta cuentaOrigen, Cuenta cuentaDestino): inicializa el monto y las dos cuentas involucradas mediante super().
+
+Atributos propios:
+
+cuentaOrigen: Cuenta
+
+cuentaDestino: Cuenta
+
+Métodos:
+
+ejecutar(): void
+
+Validar que ambas cuentas sean diferentes.
+
+Comprobar que exista saldo suficiente.
+
+Actualizar ambos saldos únicamente cuando la operación pueda completarse.
+
+Registrar la transferencia en los historiales correspondientes.
+
+Clase Historial
+
+Responsable de almacenar y consultar las operaciones realizadas.
+
+Atributos:
+
+operaciones: ArrayList<Operacion>
+
+Constructor:
+
+Historial(): inicializa la colección de operaciones.
+
+Métodos:
+
+agregarOperacion(Operacion operacion): void
+
+consultarHistorial(): ArrayList<Operacion>
+
+mostrarHistorial(): void
+
+El historial deberá almacenar las operaciones mediante referencias de tipo Operacion, aprovechando el polimorfismo.
+
+5. Manejo de excepciones personalizadas
+
+Crear excepciones propias para controlar los errores del sistema.
+
+Todas deberán heredar de Exception y contar con un constructor que reciba un mensaje.
+
+SaldoInsuficienteException
+
+Se utilizará cuando se intente retirar o transferir una cantidad superior al saldo disponible.
+
+MontoInvalidoException
+
+Se utilizará cuando se introduzca una cantidad igual o menor a cero.
+
+CuentaNoEncontradaException
+
+Se utilizará cuando se intente realizar una operación con una cuenta inexistente.
+
+NipIncorrectoException
+
+Se utilizará cuando la autenticación de una cuenta no sea correcta.
+
+OperacionInvalidaException
+
+Se utilizará cuando una operación no cumpla con las condiciones necesarias para ejecutarse.
+
+Requisitos para las excepciones:
+
+Implementar constructores para las excepciones personalizadas.
+
+Utilizar throw para lanzar excepciones.
+
+Utilizar throws en los métodos que puedan generar excepciones verificadas.
+
+Utilizar try-catch para capturar los errores.
+
+Implementar finally cuando exista alguna instrucción que deba ejecutarse independientemente del resultado.
+
+Mostrar mensajes claros al usuario.
+
+Permitir que el menú continúe funcionando después de capturar una excepción.
+
+Evitar registrar operaciones fallidas como exitosas.
+Cada paquete deberá tener una responsabilidad específica:
+
+banco: administración y búsqueda de cuentas.
+
+cuentas: información, seguridad y control del saldo.
+
+operaciones: depósitos, retiros y transferencias.
+
+historial: almacenamiento y consulta de movimientos.
+
+excepciones: manejo de errores personalizados.
+
+principal: ejecución del programa y menú principal.
+
+7. Menú principal
+
+Implementar un menú interactivo mediante Scanner que permita realizar las siguientes acciones:
+
+Registrar cuenta bancaria.
+
+Consultar cuenta.
+
+Consultar saldo.
+
+Realizar depósito.
+
+Realizar retiro.
+
+Realizar transferencia.
+
+Consultar historial de operaciones.
+
+Salir del sistema.
+
+El menú deberá repetirse hasta que el usuario seleccione la opción de salir.
+
+Se deberán controlar también las entradas incorrectas del usuario, por ejemplo, cuando introduzca texto en lugar de un número.
+
+8. Reglas importantes de implementación
+
+Utilizar constructores para inicializar correctamente los atributos de cada clase.
+
+Aplicar sobrecarga de constructores cuando sea pertinente.
+
+Utilizar this para diferenciar atributos de parámetros cuando sea necesario.
+
+Utilizar super() en los constructores de las clases que hereden de Operacion.
+
+No colocar toda la lógica del programa dentro de Main.
+
+Evitar utilizar exclusivamente métodos y atributos estáticos.
+
+Mantener los atributos privados cuando corresponda.
+
+Utilizar getters para consultar información sin permitir modificaciones indebidas.
+
+Separar las responsabilidades de cada clase.
+
+Utilizar ArrayList para almacenar cuentas y operaciones.
+
+Aplicar polimorfismo mediante la clase abstracta Operacion.
+
+Evitar duplicar código cuando pueda reutilizarse mediante métodos.
+
+Validar las operaciones antes de modificar los saldos.
+
+En las transferencias, comprobar todas las condiciones antes de actualizar cualquiera de las dos cuentas.
+
+Registrar las operaciones únicamente cuando se hayan completado correctamente.
+
+9. Conceptos de POO que deberán demostrarse
+
+Encapsulamiento: proteger los atributos de las cuentas, especialmente el saldo y el NIP.
+
+Herencia: utilizar Operacion como clase padre de Deposito, Retiro y Transferencia.
+
+Abstracción: definir una clase abstracta que establezca el comportamiento general de las operaciones.
+
+Polimorfismo: almacenar y manejar distintos tipos de operaciones mediante referencias de tipo Operacion.
+
+Constructores: inicializar correctamente los atributos de cada clase y utilizar super() en las clases derivadas.
+
+Manejo de excepciones: controlar situaciones incorrectas mediante excepciones personalizadas, try-catch, throw y throws.
+Entregables
+
+Entregar:
+
+Proyecto completo en Java.
+
+Código separado por paquetes y clases.
